@@ -303,14 +303,37 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
 @media (max-width: 980px) {
   .nav { grid-template-columns: 1fr auto; }
   .nav-contact { display: none; }
-  .menu-btn { display: block; }
+  .menu-btn { display: flex; align-items: center; gap: 12px; }
+  .menu-btn .ic { position: relative; width: 24px; height: 9px; }
+  .menu-btn .ic::before, .menu-btn .ic::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: currentColor; transition: transform .6s cubic-bezier(.16, 1, .3, 1), top .6s cubic-bezier(.16, 1, .3, 1), left .6s cubic-bezier(.16, 1, .3, 1); }
+  .menu-btn .ic::before { top: 0; }
+  .menu-btn .ic::after { top: 8px; left: 6px; }
+  .site-header.open .menu-btn .ic::before { top: 4px; transform: rotate(45deg); }
+  .site-header.open .menu-btn .ic::after { top: 4px; left: 0; transform: rotate(-45deg); }
   .only-m { display: block; }
+  .site-header.open, .site-header.open.solid { --h-fg: var(--on-dark); background: var(--brown); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
+  .site-header.open::before { opacity: 0; }
   .nav-links {
-    display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; justify-content: flex-start; gap: 0;
-    background: var(--brown); color: var(--on-dark); padding: 8px max(16px, env(safe-area-inset-left, 0px)) 18px;
+    position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; counter-reset: n;
+    background: var(--brown); color: var(--on-dark); padding: 4px max(16px, env(safe-area-inset-left, 0px)) 26px;
+    clip-path: inset(0 0 100% 0); visibility: hidden; box-shadow: 0 40px 60px -30px rgba(0, 0, 0, .5);
+    transition: clip-path .75s cubic-bezier(.76, 0, .24, 1), visibility 0s linear .75s;
   }
-  .site-header.open .nav-links { display: flex; }
-  .nav-links a { display: block; padding: 16px 0; border-bottom: 1px solid rgba(255, 255, 255, .08); background: none; }
+  .site-header.open .nav-links { clip-path: inset(0 0 -60px 0); visibility: visible; transition: clip-path .75s cubic-bezier(.76, 0, .24, 1), visibility 0s; }
+  .nav-links li { counter-increment: n; opacity: 0; transform: translate3d(0, 22px, 0); transition: opacity .35s, transform .35s; border-bottom: 1px solid rgba(255, 255, 255, .09); }
+  .site-header.open .nav-links li { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1); }
+  .site-header.open .nav-links li:nth-child(1) { transition-delay: .22s; }
+  .site-header.open .nav-links li:nth-child(2) { transition-delay: .29s; }
+  .site-header.open .nav-links li:nth-child(3) { transition-delay: .36s; }
+  .site-header.open .nav-links li:nth-child(4) { transition-delay: .43s; }
+  .site-header.open .nav-links li:nth-child(5) { transition-delay: .5s; }
+  .site-header.open .nav-links li:nth-child(6) { transition-delay: .57s; }
+  .nav-links a { display: flex; align-items: baseline; gap: 16px; padding: 17px 0; font-family: var(--display); font-size: 1.55rem; font-weight: 400; letter-spacing: .01em; text-transform: none; background: none; line-height: 1.1; }
+  .nav-links a::before { content: "0" counter(n); font-family: var(--body); font-size: .66rem; letter-spacing: .2em; color: var(--gold); min-width: 22px; }
+  .nav-links a::after { content: "→"; margin-left: auto; font-family: var(--body); font-size: 1rem; color: var(--gold); transform: translateX(-8px); opacity: 0; transition: transform .4s, opacity .4s; }
+  .nav-links a:active::after { transform: none; opacity: 1; }
+  .nav-links li.only-m { border-bottom: 0; }
+  .nav-links li.only-m a { color: var(--gold-hi); }
   .sec-head, .contact-grid, .bed-box, .build-grid { grid-template-columns: minmax(0, 1fr); }
   .build-img { aspect-ratio: 4 / 3; }
   .svc-grid { grid-template-columns: minmax(0, 1fr); }
@@ -331,6 +354,7 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
 @media (max-width: 560px) {
   .hero { padding-block: 104px 44px; min-height: calc(100vh - 44px); min-height: calc(100svh - 44px - env(safe-area-inset-top, 0px)); }
   .hero-tag { display: none; }
+  .intro { bottom: auto; height: calc(100vh - 44px); height: calc(100svh - 44px); }
   .foot { grid-template-columns: minmax(0, 1fr); }
   .foot > :first-child { grid-column: auto; }
   .foot a, .foot li { overflow-wrap: anywhere; min-width: 0; }
@@ -387,7 +411,7 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
       <li class="only-m"><a href="#contact">Contact</a></li>
     </ul>
     <a class="nav-contact" href="#contact">Contact</a>
-    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navlinks"><span class="lb">Menu</span><span class="ic" aria-hidden="true"></span></button>
   </div>
 </header>
 
@@ -663,9 +687,10 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
   var mb = $('#menuBtn');
   mb.addEventListener('click', function () {
     var o = hdr.classList.toggle('open'); mb.setAttribute('aria-expanded', o ? 'true' : 'false');
+    $('.lb', mb).textContent = o ? 'Fermer' : 'Menu';
   });
   $$('#navlinks a').forEach(function (a) {
-    a.addEventListener('click', function () { hdr.classList.remove('open'); mb.setAttribute('aria-expanded', 'false'); });
+    a.addEventListener('click', function () { hdr.classList.remove('open'); mb.setAttribute('aria-expanded', 'false'); $('.lb', mb).textContent = 'Menu'; });
   });
 
   function solidCheck() {
@@ -1071,7 +1096,7 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
       var sy = window.pageYOffset;
       var dy = sy - lastSy;
       if (sy > 480 && !hdr.classList.contains('open')) {
-        if (dy > 6 && !hdrHidden) { hdrHidden = true; hdr.classList.add('hide'); }
+        if (dy > 6 && !hdrHidden && !hdr.classList.contains('open')) { hdrHidden = true; hdr.classList.add('hide'); }
         else if (dy < -6 && hdrHidden) { hdrHidden = false; hdr.classList.remove('hide'); }
       } else if (hdrHidden) { hdrHidden = false; hdr.classList.remove('hide'); }
       if (Math.abs(dy) > 6 || sy <= 480) lastSy = sy;
