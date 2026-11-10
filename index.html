@@ -265,7 +265,7 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
 .legal { margin-top: 48px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, .15); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; color: var(--on-dark-mute); font-size: .84rem; }
 
 /* Motion */
-.intro { position: fixed; inset: 0; z-index: 100; background: var(--brown); display: grid; place-items: center; color: var(--on-dark); animation: introFail 0s linear 6s forwards; }
+.intro { position: fixed; top: 0; left: 0; right: 0; bottom: auto; height: 100vh; height: 100lvh; min-height: 100%; z-index: 100; background: var(--brown); display: grid; place-items: center; color: var(--on-dark); animation: introFail 0s linear 6s forwards; }
 @keyframes introFail { to { visibility: hidden; } }
 .intro .mk { display: flex; align-items: center; gap: 16px; }
 .intro .mk svg { width: 62px; height: 52px; }
@@ -354,7 +354,6 @@ footer { background: var(--brown); color: var(--on-dark); padding-block: 64px 36
 @media (max-width: 560px) {
   .hero { padding-block: 104px 44px; min-height: calc(100vh - 44px); min-height: calc(100svh - 44px - env(safe-area-inset-top, 0px)); }
   .hero-tag { display: none; }
-  .intro { bottom: auto; height: calc(100vh - 44px); height: calc(100svh - 44px); }
   .foot { grid-template-columns: minmax(0, 1fr); }
   .foot > :first-child { grid-column: auto; }
   .foot a, .foot li { overflow-wrap: anywhere; min-width: 0; }
